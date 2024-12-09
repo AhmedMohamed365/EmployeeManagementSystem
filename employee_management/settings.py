@@ -32,7 +32,7 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'rest_framework',      # Django REST Framework
-    'employee',        # App for REST API
+    'employees',        # App for REST API
     'companies',        # App for REST API
     'departments',        # App for REST API
     'users',        # App for REST API
