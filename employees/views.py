@@ -22,8 +22,8 @@ class EmployeeViewSet(viewsets.ModelViewSet):
         Retrieve a specific employee by ID
         """
         try:
-            Employee = self.get_queryset().get(pk=pk)
-            serializer = self.get_serializer(Employee)
+            employee = self.get_queryset().get(pk=pk)
+            serializer = self.get_serializer(employee)
             return Response(serializer.data)
         except Employee.DoesNotExist:
             return Response({
@@ -55,17 +55,17 @@ class EmployeeViewSet(viewsets.ModelViewSet):
         Update an existing Employee
         """
         try:
-            Employee = self.get_queryset().get(pk=pk)
-            serializer = self.get_serializer(Employee, data=request.data, partial=True)
+            employee = self.get_queryset().get(pk=pk)
+            serializer = self.get_serializer(employee, data=request.data, partial=True)
             
             if serializer.is_valid():
                 # Additional validation for Employee name
-                name = serializer.validated_data.get('name')
-                if name:
-                    existing_Employee = Employee.objects.filter(name__iexact=name).exclude(pk=pk)
+                email = serializer.validated_data.get('email')
+                if email:
+                    existing_Employee = Employee.objects.filter(email__iexact=email).exclude(pk=pk)
                     if existing_Employee.exists():
                         return Response({
-                            'error': 'A Employee with this name already exists'
+                            'error': 'An  Employee with this email already exists'
                         }, status=status.HTTP_400_BAD_REQUEST)
                 
                 serializer.save()
@@ -83,12 +83,12 @@ class EmployeeViewSet(viewsets.ModelViewSet):
         Delete a Employee
         """
         try:
-            Employee = self.get_queryset().get(pk=pk)
+            employee = self.get_queryset().get(pk=pk)
             
             
             
             
-            Employee.delete()
+            employee.delete()
             return Response(status=status.HTTP_204_NO_CONTENT)
         
         except Employee.DoesNotExist:
