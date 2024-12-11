@@ -32,6 +32,7 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'rest_framework',      # Django REST Framework
+    'rest_framework.authtoken',      # Django REST Framework auth
     'employees',        # App for REST API
     'companies',        # App for REST API
     'departments',        # App for REST API
@@ -59,6 +60,9 @@ REST_FRAMEWORK = {
         'rest_framework.renderers.JSONRenderer',
         'rest_framework.renderers.BrowsableAPIRenderer',  # Enable Browsable API
     ],
+    'DEFAULT_AUTHENTICATION_CLASSES':[
+        'rest_framework.authentication.TokenAuthentication',
+    ]
 }
 ROOT_URLCONF = "employee_management.urls"
 
