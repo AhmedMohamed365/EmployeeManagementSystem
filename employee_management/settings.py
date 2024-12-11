@@ -32,7 +32,8 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'rest_framework',      # Django REST Framework
-    'rest_framework.authtoken',      # Django REST Framework auth
+    'rest_framework_simplejwt',      # Django REST Framework auth
+    'djoser', # authentication management
     'employees',        # App for REST API
     'companies',        # App for REST API
     'departments',        # App for REST API
@@ -44,6 +45,9 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
 ]
+
+#modify user model in Django
+AUTH_USER_MODEL  = 'users.User'
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -62,19 +66,46 @@ REST_FRAMEWORK = {
     ],
     'DEFAULT_AUTHENTICATION_CLASSES':[
          'rest_framework_simplejwt.authentication.JWTAuthentication',
-    ]
+         'rest_framework.authentication.TokenAuthentication',
+         'rest_framework.authentication.SessionAuthentication',
+    ],
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    ),
 }
+
 
 # configs of jwt
 from datetime import timedelta
 
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
     'ROTATE_REFRESH_TOKENS': True,
     'BLACKLIST_AFTER_ROTATION': True,
     'AUTH_HEADER_TYPES': ('Bearer',),
 }
+
+
+DJOSER = {
+    'LOGIN_FIELD': 'email',  # Use email for login (optional)
+    'USER_CREATE_PASSWORD_RETYPE': True,  # Require password confirmation
+    'SEND_ACTIVATION_EMAIL': False,  # Set to True if you want email activation
+    'PASSWORD_RESET_CONFIRM_URL': 'password/reset/confirm/{uid}/{token}',
+    'ACTIVATION_URL': 'activate/{uid}/{token}',
+    'SERIALIZERS': {
+        'user_create': 'users.serializers.CustomUserCreateSerializer',
+        'user': 'users.serializers.CustomUserSerializer',
+    },
+    'PERMISSIONS': {
+        'user_create': ['rest_framework.permissions.IsAdminUser'],  # Restrict user creation to admins
+        'user_delete': ['rest_framework.permissions.IsAdminUser'],  # Restrict user deletion to admins
+        'user_list': ['rest_framework.permissions.IsAuthenticated'],  # Allow authenticated users to view users
+
+    },
+}
+
+
 
 ROOT_URLCONF = "employee_management.urls"
 
