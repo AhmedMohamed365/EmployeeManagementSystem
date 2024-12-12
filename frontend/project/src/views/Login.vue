@@ -1,21 +1,36 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
-import { useAuthStore } from '../stores/auth';
+import { useAuth } from '../composables'; // Ensure this file exists and is functional
 
-const username = ref('');
+const email = ref('');
 const password = ref('');
-const error = ref('');
+const errorMessage = ref('');
 const router = useRouter();
-const authStore = useAuthStore();
+const { login, loading } = useAuth();
 
 async function handleLogin() {
-  error.value = '';
-  const success = await authStore.login(username.value, password.value);
-  if (success) {
-    router.push('/');
-  } else {
-    error.value = 'Invalid credentials';
+  errorMessage.value = ''; // Reset the error message before login attempt
+  
+  if (!email.value || !password.value) {
+    errorMessage.value = 'Email and password are required.';
+    return;
+  }
+
+  try {
+    const success = await login({
+      email: email.value,
+      password: password.value,
+    });
+
+    if (success) {
+      router.push('/');
+    } else {
+      errorMessage.value = 'Invalid email or password.';
+    }
+  } catch (error) {
+    errorMessage.value = 'An error occurred. Please try again later.';
+    console.error('Login error:', error);
   }
 }
 </script>
@@ -31,14 +46,15 @@ async function handleLogin() {
       <form class="mt-8 space-y-6" @submit.prevent="handleLogin">
         <div class="rounded-md shadow-sm -space-y-px">
           <div>
-            <label for="username" class="sr-only">Username</label>
+            <label for="email" class="sr-only">Email</label>
             <input
-              id="username"
-              v-model="username"
-              type="text"
+              id="email"
+              v-model="email"
+              type="email"
               required
+              aria-required="true"
               class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-              placeholder="Username"
+              placeholder="Email address"
             />
           </div>
           <div>
@@ -48,6 +64,7 @@ async function handleLogin() {
               v-model="password"
               type="password"
               required
+              aria-required="true"
               class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
               placeholder="Password"
             />
@@ -57,13 +74,17 @@ async function handleLogin() {
         <div>
           <button
             type="submit"
-            class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            :disabled="loading"
+            class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50"
           >
-            Sign in
+            <span v-if="loading">Signing in...</span>
+            <span v-else>Sign in</span>
           </button>
         </div>
         
-        <p v-if="error" class="text-red-500 text-center">{{ error }}</p>
+        <p v-if="errorMessage" class="text-red-500 text-center mt-4">
+          {{ errorMessage }}
+        </p>
       </form>
     </div>
   </div>

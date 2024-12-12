@@ -25,7 +25,7 @@ SECRET_KEY = "django-insecure-&hki09xq#t5ol!5++lbe93@y1ie^dd=b(sgyz$z%vwwmj3!&bt
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -47,6 +47,11 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
 ]
 
+INSTALLED_APPS += ['corsheaders']
+
+CORS_ALLOW_ALL_ORIGINS = True  # Or specify allowed origins explicitly
+
+
 #modify user model in Django
 AUTH_USER_MODEL  = 'users.User'
 
@@ -59,6 +64,8 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
+
+MIDDLEWARE.insert(0, 'corsheaders.middleware.CorsMiddleware')
 
 REST_FRAMEWORK = {
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
