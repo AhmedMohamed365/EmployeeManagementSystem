@@ -5,6 +5,7 @@ class IsSuperUserOrAdmin(BasePermission):
     """
     Custom permission to only allow superusers to create users.
     """
+    message = "You must be a superuser to perform this action."
     def has_permission(self, request, view):
         # Allow access only if the user is authenticated and is a superuser
         

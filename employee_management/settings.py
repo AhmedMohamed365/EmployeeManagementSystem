@@ -98,7 +98,7 @@ DJOSER = {
         'user': 'users.serializers.CustomUserSerializer',
     },
     'PERMISSIONS': {
-        'user_create': ['rest_framework.permissions.IsAdminUser'],  # Restrict user creation to admins
+        'user_create': ['users.permissions.IsSuperUserOrAdmin'],  # Restrict user creation to admins
         'user_delete': ['rest_framework.permissions.IsAdminUser'],  # Restrict user deletion to admins
         'user_list': ['rest_framework.permissions.IsAuthenticated'],  # Allow authenticated users to view users
 
