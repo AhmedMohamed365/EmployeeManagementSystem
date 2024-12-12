@@ -1,4 +1,4 @@
-export const API_BASE_URL = 'http://your-django-api-url';
+export const API_BASE_URL = 'http://127.0.0.1:8000';
 export const AUTH_BASE_URL = `${API_BASE_URL}/auth`;
 
 export const API_ENDPOINTS = {

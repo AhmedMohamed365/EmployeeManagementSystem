@@ -14,15 +14,9 @@ export function useAuth() {
     try {
       startLoading();
       clearError();
-      const success = await store.login(credentials);
-      if (!success) {
-        setError('Invalid email or password.');
-      }
-      return success;
-    } catch (err: any) {
-      // If backend returns an error message, display it dynamically
-      const errorMessage = err.response?.data?.detail || 'Login failed. Please try again.';
-      setError(errorMessage);
+      return await store.login(credentials);
+    } catch (err) {
+      setError('Login failed. Please check your credentials.');
       return false;
     } finally {
       stopLoading();
@@ -30,7 +24,6 @@ export function useAuth() {
   }
 
   function logout() {
-    clearError(); // Clear error when logging out
     store.logout();
   }
 
@@ -40,6 +33,6 @@ export function useAuth() {
     error,
     isAuthenticated,
     login,
-    logout,
+    logout
   };
 }

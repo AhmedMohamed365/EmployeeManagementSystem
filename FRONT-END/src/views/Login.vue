@@ -1,36 +1,21 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
-import { useAuth } from '../composables'; // Ensure this file exists and is functional
+import { useAuth } from '../composables';
 
 const email = ref('');
 const password = ref('');
-const errorMessage = ref('');
 const router = useRouter();
-const { login, loading } = useAuth();
+const { login, loading, error } = useAuth();
 
 async function handleLogin() {
-  errorMessage.value = ''; // Reset the error message before login attempt
+  const success = await login({
+    email: email.value,
+    password: password.value
+  });
   
-  if (!email.value || !password.value) {
-    errorMessage.value = 'Email and password are required.';
-    return;
-  }
-
-  try {
-    const success = await login({
-      email: email.value,
-      password: password.value,
-    });
-
-    if (success) {
-      router.push('/');
-    } else {
-      errorMessage.value = 'Invalid email or password.';
-    }
-  } catch (error) {
-    errorMessage.value = 'An error occurred. Please try again later.';
-    console.error('Login error:', error);
+  if (success) {
+    router.push('/');
   }
 }
 </script>
@@ -52,7 +37,6 @@ async function handleLogin() {
               v-model="email"
               type="email"
               required
-              aria-required="true"
               class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
               placeholder="Email address"
             />
@@ -64,7 +48,6 @@ async function handleLogin() {
               v-model="password"
               type="password"
               required
-              aria-required="true"
               class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
               placeholder="Password"
             />
@@ -82,9 +65,7 @@ async function handleLogin() {
           </button>
         </div>
         
-        <p v-if="errorMessage" class="text-red-500 text-center mt-4">
-          {{ errorMessage }}
-        </p>
+        <p v-if="error" class="text-red-500 text-center">{{ error }}</p>
       </form>
     </div>
   </div>

@@ -47,6 +47,8 @@ const handleDelete = async (employee: Employee) => {
 
 <template>
   <AppLayout>
+
+    
     <div class="sm:flex sm:items-center">
       <div class="sm:flex-auto">
         <h1 class="text-xl font-semibold text-gray-900">Employees</h1>
@@ -61,6 +63,7 @@ const handleDelete = async (employee: Employee) => {
       </div>
     </div>
     <div class="mt-8">
+      
       <DataTable
         :columns="columns"
         :data="employeeList"
@@ -71,4 +74,11 @@ const handleDelete = async (employee: Employee) => {
       />
     </div>
   </AppLayout>
+
+  
 </template>
+
+
+
+
+
