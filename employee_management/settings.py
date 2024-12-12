@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'companies',        # App for REST API
     'departments',        # App for REST API
     'users',        # App for REST API
+    'drf_spectacular',  # for documentation
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -60,6 +61,7 @@ MIDDLEWARE = [
 ]
 
 REST_FRAMEWORK = {
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
     'DEFAULT_RENDERER_CLASSES': [
         'rest_framework.renderers.JSONRenderer',
         'rest_framework.renderers.BrowsableAPIRenderer',  # Enable Browsable API
