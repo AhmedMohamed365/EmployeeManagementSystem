@@ -58,10 +58,13 @@ Request body:
 
 - Create Department: POST /api/departments/
 
-Request body:
-``` json
-        {
-        "name": "New Department",
-        "company": 1
-        }
 
+
+**Examples from swagger**
+
+!![Alt Text](docs/1.png)
+
+!![Alt Text](docs/2.png)
+
+
+!![Alt Text](docs/3.png)
