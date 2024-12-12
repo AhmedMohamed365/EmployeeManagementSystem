@@ -15,6 +15,8 @@ def update_employee_counts_on_save(sender, instance, created, **kwargs):
     if created:
         instance.Department.update_department_employee_count()
         instance.Department.update_company_employee_count()
+        instance.Department.save()
+        
 
 @receiver(post_delete, sender=Employee)
 def update_employee_counts_on_delete(sender, instance, **kwargs):
@@ -23,3 +25,4 @@ def update_employee_counts_on_delete(sender, instance, **kwargs):
     """
     instance.Department.update_department_employee_count()
     instance.Department.update_company_employee_count()
+    instance.Department.save()

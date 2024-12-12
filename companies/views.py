@@ -6,12 +6,10 @@ from .models import Company
 from .serializers import CompanySerializer
 
 # auth modules
-from rest_framework.authentication import TokenAuthentication
-from rest_framework.permissions import IsAuthenticated
+
 
 class CompanyViewSet(viewsets.ModelViewSet):
-    authentication_classes = [TokenAuthentication]
-    permission_classes = [IsAuthenticated]
+
     queryset = Company.objects.all()
     serializer_class = CompanySerializer
 
