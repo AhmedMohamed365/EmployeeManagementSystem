@@ -1,24 +1,28 @@
+# models.py
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from django.db import models
 from django.utils import timezone
 
 class CustomUserManager(BaseUserManager):
-    def create_user(self, username, email, password=None, role='viewer', **extra_fields):
+    def create_user(self, email, password=None, role=None, username=None, **extra_fields):
         """
         Create and return a regular user with the specified role.
         """
         if not email:
             raise ValueError("The Email field must be set")
-        if not username:
-            raise ValueError("The Username field must be set")
+        
         
         # Normalize the email address
         email = self.normalize_email(email)
         
+        # Use email as username if not provided
+        if not username:
+            username = email.split('@')[0]
+        
         # Create the user
         user = self.model(
-            username=username, 
             email=email, 
+            username=username,
             role=role,
             **extra_fields
         )
@@ -28,7 +32,7 @@ class CustomUserManager(BaseUserManager):
         user.save(using=self._db)
         return user
 
-    def create_superuser(self, username, email, password=None, **extra_fields):
+    def create_superuser(self, email, password=None, **extra_fields):
         """
         Create and return a superuser.
         """
@@ -45,7 +49,6 @@ class CustomUserManager(BaseUserManager):
             raise ValueError('Superuser must have is_superuser=True.')
         
         return self.create_user(
-            username=username, 
             email=email, 
             password=password, 
             **extra_fields
@@ -56,24 +59,22 @@ class User(AbstractBaseUser, PermissionsMixin):
     ROLE_CHOICES = [
         ('admin', 'Administrator'),
         ('manager', 'Manager'),
-        ('editor', 'Editor'),
-        ('viewer', 'Viewer'),
+        ('employee', 'Employee'),
     ]
 
     # Basic user information
+    email = models.EmailField(
+        unique=True, 
+        help_text="Enter a valid email address"
+    )
     username = models.CharField(
         max_length=50, 
         unique=True, 
         help_text="Enter a unique username"
     )
-    email = models.EmailField(
-        unique=True, 
-        help_text="Enter a valid email address"
-    )
     role = models.CharField(
         max_length=20, 
-        choices=ROLE_CHOICES, 
-        default='viewer',
+        choices=ROLE_CHOICES,
         help_text="Select user role"
     )
 
@@ -99,27 +100,23 @@ class User(AbstractBaseUser, PermissionsMixin):
     )
 
     # Define the fields that will be used for authentication
-    USERNAME_FIELD = 'username'
+    USERNAME_FIELD = 'email'  # Change this to email
     EMAIL_FIELD = 'email'
-    REQUIRED_FIELDS = ['email', 'role']
+    REQUIRED_FIELDS = ['username', 'role']
 
     # Use the custom user manager
     objects = CustomUserManager()
 
     def __str__(self):
-        return f"{self.username} ({self.get_role_display()})"
+        return f"{self.email} ({self.get_role_display()})"
 
     def get_full_name(self):
-        return self.username
+        return self.email
 
     def get_short_name(self):
-        return self.username
+        return self.email
 
     class Meta:
         verbose_name = 'User'
         verbose_name_plural = 'Users'
         ordering = ['-date_joined']
-        permissions = [
-            ("view_user_details", "Can view user details"),
-            ("edit_user_role", "Can edit user role"),
-        ]
