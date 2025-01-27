@@ -77,13 +77,13 @@ This a full stack project that has **RESTful API** built using Django and Django
     - [ ] Employee Management:
       - [ ] List Employees Page: Display a list of all employees with options to view, edit, and delete each employee
       - [✅ ] Create Employee Page: Form to create a new employee
-      - [ ❌] Edit Employee Page: Form to edit an existing employee
+      - [ ✅] Edit Employee Page: Form to edit an existing employee
       - [ ] View Employee Page: View detailed information of a single employee
 - [ ] **Validations:**
   - [ ] Validate all required fields are filled
-  - [ ❌] Validate email addresses and mobile numbers are in the correct format
+  - [ ✅] Validate email addresses and mobile numbers are in the correct format
   - [ ✅] Ensure that the Department field in Employee page only shows departments related to the selected company
-  - [❌ ] Handle errors and show appropriate & user-friendly messages
+  - [✅ ] Handle errors and show appropriate & user-friendly messages
 
 ### Why JWT was chosen? :
 To enhance security  in such confidentail application and to have better performance with large number of users.
